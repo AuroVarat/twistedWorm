@@ -26,8 +26,9 @@ default = np.genfromtxt("src/default.txt",dtype='str')
 
 input_dir = dir[0,1]    # input directory
 output_dir = dir[1,1]  # output directory
-extraFilter = dir[2,1] # extra filter to filter out negative values of distance
+extraFilter = bool(dir[2,1]) # extra filter to filter out negative values of distance
 whichCurve = dir[3,1]   # which curve to fit
+useLog = bool(dir[4,1]) # use log scale for the fits
 os.makedirs(output_dir, exist_ok=True) # create the output directory if it does not exist
 
 
@@ -99,7 +100,10 @@ def set_params(fit, limit=None):
 # Multiple Independent Fits
 def independent_fits(force_distance_dict,model,initial_guess_dict=False,param_limit=None):
     fits = {}
- 
+    if not initial_guess_dict: 
+        print("Finding initial guess by fitting Odijk model")
+    else:
+        print("Fitting TWLC model")
     with tqdm(total=len(force_distance_dict.keys())) as pbar:
         for i, (force_array,distance_array) in enumerate(force_distance_dict.values()):
             # Add a dataset to the fit
@@ -108,7 +112,7 @@ def independent_fits(force_distance_dict,model,initial_guess_dict=False,param_li
         
             if initial_guess_dict == False:
                 # This means we are fitting the Odijk model, so we filter data to get forces < 30
-                print("Fitting TWLC model")
+         
                 mask = force_array < 30
                 force_array = force_array[mask]
                 distance_array = distance_array[mask]
@@ -116,7 +120,7 @@ def independent_fits(force_distance_dict,model,initial_guess_dict=False,param_li
             fit.add_data(sample_name[i], force_array, distance_array) 
                 
             if initial_guess_dict:
-                print("Finding initial guess by fitting Odijk model")
+                
                 fit.update_params(initial_guess_dict[sample_name[i]])
 
             fit = set_params(fit,param_limit)
@@ -145,6 +149,8 @@ final_fit = independent_fits(force_distance_dict,m_odijk,initial_guess_dict=f_gu
 getFiles.getForceDistance(input_dir, output_dir, force_distance_dict)# save the force distance arrays
 getFiles.getParams(input_dir, output_dir, sample_name, final_fit)# save the fit parameters for each sample in a text file
 
-getPlots.plot_rawdata(force_distance_dict, output_dir) # save the raw data for each sample in a plot
-getPlots.plot_params(sample_name,final_fit,output_dir) # plot the fit parameters for each sample in a plot
-getPlots.plot_fits(sample_name,final_fit,output_dir) # save the fits for each sample in a plotn along with the raw data
+
+getPlots.plot_params(sample_name,whichCurve,final_fit,output_dir) # plot the fit parameters for each sample in a plot
+
+getPlots.plot_rawdata(force_distance_dict, output_dir,useLog) # save the raw data for each sample in a plot
+getPlots.plot_fits(sample_name,final_fit,output_dir,useLog) # save the fits for each sample in a plotn along with the raw data
