@@ -1,0 +1,5 @@
+#PARAM VALUE
+Source data/sample_data_amandine
+Export data/output_amandine
+Filter true 
+Curve both

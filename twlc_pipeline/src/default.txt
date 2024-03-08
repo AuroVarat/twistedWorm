@@ -1,0 +1,7 @@
+#PARAMS VALUE TYPE DESCRIPTION
+DNA/d_offset 0.01 upper_bound distance-d_offset
+DNA/d_offset    -0.01 lower_bound distance_d_offset
+DNA/C       440 value   twist-rigidity
+DNA/C   true    fixed   twist-rigidity
+DNA/Fc  30.6    value   critical-force
+DNA/Fc  true    fixed   critical-force
