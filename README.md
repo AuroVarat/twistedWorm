@@ -15,8 +15,27 @@
 ## Installation
 
 If you do not have the conda environment, you can create a new environment using the following command.
-`conda create --name <env> --file requirements.txt`
+
+`conda create -n pylake conda=23.7.2`
+
+
+
+Then you can activate the environment using the following command.
+`conda activate pylake`
+
+Add conda-forge to the list of channels you can install packages from using the following command.
+`conda config --add channels conda-forge`
+
+Then you can install the required packages using the following command.
+`conda install --file requirements.txt`
 This will create a new environment with the name env and install all the required packages.
+
+Make sure to have the conda env python in the PATH. You can check this by running the following command.
+`which python`
+
+If it is not in the PATH, you can add it to the PATH using the following command.
+`export PATH=$PATH:/home/user/anaconda3/envs/pylake/bin:$PATH`
+
 
 ## Basic Usage
 
