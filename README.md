@@ -116,3 +116,7 @@ def final_fit_model():
 ```
 
 You can also set the custom model for the initial guess and the final fit. You can also add new parameters to the model that are compatible with PyLake.
+
+<!-- add contributor -->
+Author: Auro Varat Patnaik
+<!-- add license -->
