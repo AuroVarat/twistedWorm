@@ -48,6 +48,7 @@ Source data/<my-data>
 Export data/<my-output>
 Filter true 
 Curve both
+useLog true
 ```
 
 Make sure you are in the directory with main.py. Then run the following command.
