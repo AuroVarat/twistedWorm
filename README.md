@@ -85,8 +85,6 @@ useLog is set to true, then the log of the y-axis will be taken. This is useful 
 **default.txt**
 ```html
 #PARAMS VALUE TYPE DESCRIPTION
-DNA/d_offset 0.01 upper_bound distance-d_offset
-DNA/d_offset    -0.01 lower_bound distance_d_offset
 DNA/C       440 value   twist-rigidity
 DNA/C   true    fixed   twist-rigidity
 DNA/Fc  30.6    value   critical-force
@@ -94,6 +92,12 @@ DNA/Fc  true    fixed   critical-force
 ```
 You can set the initial guesses for the parameters in the default.txt file. You can also set the upper and lower bounds for the parameters. You can also fix the parameters by setting the fixed to true. You can also add new parameters to the default.txt file that are compatible with PyLake.
 
+This needs to be done for the final fit model.
+
+ :warning: **If you are using custom model**: Change the default.txt accordingly if you are using a custom model in your final_fit_model function as instructed in the next section. Different models have different parameters and the default.txt file should be updated accordingly. 
+ 
+If you decide to change the initial guesses, you can also change the initial_guess_model function in the model.py file.
+But make sure to change the input_guess_params.txt file accordingly.
 
 ### 3. Custom Model
 **model.py**

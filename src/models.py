@@ -14,5 +14,6 @@ def final_fit_model():
     Default is the tWLC model.
     
     """
+    # return lk.ewlc_odijk_force("DNA").subtract_independent_offset() + lk.force_offset("DNA")
 
     return lk.twlc_force("DNA").subtract_independent_offset() + lk.force_offset("DNA")

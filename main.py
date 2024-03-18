@@ -23,6 +23,7 @@ The whichCurve is a string to select the type of curve to be fitted. It can be "
 
 dir = np.genfromtxt("src/input.txt",dtype='str')
 default = np.genfromtxt("src/default.txt",dtype='str')
+initial_guess = np.genfromtxt("src/initial_guess_params.txt",dtype='str')
 
 input_dir = dir[0,1]    # input directory
 output_dir = dir[1,1]  # output directory
@@ -91,14 +92,25 @@ m_dna = m.final_fit_model()
 
 
 
-def set_params(fit, limit=None):
-    for i in default[slice(*limit)]:
-        setattr(fit[i[0]], i[2], float(i[1]))
+def set_params(fit,param_src):
+
+    for i in param_src:
+
+        # set attr using setattr(fit[i[0]], i[2], float(i[1])) but if i[1] is str true or false, then use bool(i[1])
+        if i[1] == "true" or i[1] == "false":
+            setattr(fit[i[0]], i[2], bool(i[1]))
+        else:
+            setattr(fit[i[0]], i[2], float(i[1]))
     return fit
 
 
 # Multiple Independent Fits
-def independent_fits(force_distance_dict,model,initial_guess_dict=False,param_limit=None):
+def independent_fits(force_distance_dict,model,fit_params,initial_guess_dict=False):
+    """
+    This function fits the force distance curves independently
+
+    initial_guess_dict: dictionary containing the initial guess for the fit, this can only be inherited from the Odijk model
+    """
     fits = {}
     if not initial_guess_dict: 
         print("Finding initial guess by fitting Odijk model")
@@ -106,41 +118,44 @@ def independent_fits(force_distance_dict,model,initial_guess_dict=False,param_li
         print("Fitting TWLC model")
     with tqdm(total=len(force_distance_dict.keys())) as pbar:
         for i, (force_array,distance_array) in enumerate(force_distance_dict.values()):
-            # Add a dataset to the fit
-        
+            # create a fit model
             fit = lk.FdFit(model)
-        
+            
+            # if initial_guess_dict is False, we are fitting the Odijk model for initial guess
             if initial_guess_dict == False:
                 # This means we are fitting the Odijk model, so we filter data to get forces < 30
-         
                 mask = force_array < 30
                 force_array = force_array[mask]
                 distance_array = distance_array[mask]
 
+            # add data to the fit model, this is sandwiched between the model and the params
             fit.add_data(sample_name[i], force_array, distance_array) 
                 
             if initial_guess_dict:
-                
                 fit.update_params(initial_guess_dict[sample_name[i]])
 
-            fit = set_params(fit,param_limit)
+            fit = set_params(fit,fit_params)
             fit.fit()
 
             fits[sample_name[i]] = fit
             pbar.update(1)
-    
+            print(fit.params)
     
     return fits
 
 """
 Initial Guess using the Odijk model
 """
-f_guess = independent_fits(force_distance_dict,m_odijk,initial_guess_dict=False,param_limit=(0,2))
+f_guess = independent_fits(force_distance_dict,m_odijk,
+                           fit_params=initial_guess,
+                           initial_guess_dict=False)
 
 """
 Then use the parameters from the Odijk model to fit the DNA model
 """
-final_fit = independent_fits(force_distance_dict,m_odijk,initial_guess_dict=f_guess,param_limit=(2,))
+final_fit = independent_fits(force_distance_dict,m_dna,
+                            fit_params=default,
+                             initial_guess_dict=f_guess)
 
 
 # Save the values of all params for each curve
