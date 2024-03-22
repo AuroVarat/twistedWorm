@@ -27,9 +27,9 @@ initial_guess = np.genfromtxt("src/initial_guess_params.txt",dtype='str')
 
 input_dir = dir[0,1]    # input directory
 output_dir = dir[1,1]  # output directory
-extraFilter = bool(dir[2,1]) # extra filter to filter out negative values of distance
+extraFilter = bool(int(dir[2,1])) # extra filter to filter out negative values of distance
 whichCurve = dir[3,1]   # which curve to fit
-useLog = bool(dir[4,1]) # use log scale for the fits
+useLog = bool(int(dir[4,1])) # use log scale for the fits
 os.makedirs(output_dir, exist_ok=True) # create the output directory if it does not exist
 
 

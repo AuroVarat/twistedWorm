@@ -1,6 +1,6 @@
 #PARAM VALUE
-Source data/sample_data_amandine
-Export data/output_amandine
-Filter True 
-Curve extension
-useLog True
+Source data/new_georgia
+Export data/output_new
+Filter 1 
+Curve   retraction
+useLog  1

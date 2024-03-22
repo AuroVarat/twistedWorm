@@ -77,15 +77,16 @@ def plot_fits(sample_name, final_fit, output_dir,useLog):
         final_fit[i].plot()
     # put legend outside the plot
     plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.5), ncol=len(sample_name))
- 
+    plt.ylabel('Force (pN)',fontsize=16)
 
     plt.title('Force vs Distance',fontsize=16)
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
     plt.xlabel('Distance (nm)',fontsize=16)
-    plt.ylabel('Log Force (pN)',fontsize=16)
+
     plt.grid(True)
     if useLog:
+        plt.ylabel('Log Force (pN)',fontsize=16)
         plt.yscale('log')
     plt.tight_layout()
     plt.savefig(output_dir+'/fit.png',bbox_inches='tight')
@@ -111,11 +112,12 @@ def plot_rawdata(force_distance_dict, output_dir,useLog):
    
     # put legend outside the plot
     plt.xlabel('Distance (nm)')
-    plt.ylabel('Log Force (pN)')
+    plt.ylabel('Force (pN)')
     plt.title('Force vs Distance',fontsize=16)  
     plt.grid(True)
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-    if useLog:
+    if useLog == True:
+        plt.ylabel('Log Force (pN)')
         plt.yscale('log')
     plt.tight_layout()
     plt.savefig(output_dir+'/rawdata.png')

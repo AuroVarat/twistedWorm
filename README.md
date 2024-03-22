@@ -72,14 +72,16 @@ Furthermore, experimental data might contain small offsets. These offsets could 
 #PARAM VALUE
 Source data/<my-data>
 Export data/<my-output>
-Filter true 
+Filter 1
 Curve both
-useLog true
+useLog 1
 ```
 
-You can set Filter to false. This will not filter the data if it contains any negative values for distance.
+You can set Filter to false (set to 0). This will not filter the data if it contains any negative values for distance.
 And for the Curve, you can set it to 'both', 'extension' or 'retraction'. This will then analyse the data for both the curves or only for the extension or retraction curve.
 useLog is set to true, then the log of the y-axis will be taken. This is useful when the data is not linear.
+
+To change true to false, change 1 to 0.
 
 ### 2. Custom Initial Guesses
 **default.txt**
