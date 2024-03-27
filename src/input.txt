@@ -1,6 +1,6 @@
 #PARAM VALUE
-Source data/new_georgia
-Export data/output_new
+Source data/sample_data
+Export data/output
 Filter 1 
 Curve   retraction
 useLog  1

@@ -1,5 +1,7 @@
 # TWLC Fitting for Optical Tweezer Data
-
+<!-- add contributor -->
+Auro Varat Patnaik
+<!-- add license -->
 ## Table of Contents
 
 - [TWLC Fitting for Optical Tweezer Data](#twlc-fitting-for-optical-tweezer-data)
@@ -9,39 +11,34 @@
   - [Model](#model)
   - [Advanced Usage](#advanced-usage)
     - [1. Filtering Data](#1-filtering-data)
-    - [2. Custom Initial Guesses](#2-custom-initial-guesses)
-    - [3. Custom Model](#3-custom-model)
+    - [2. Custom Model](#2-custom-model)
+    - [3. Custom Initial Guesses](#3-custom-initial-guesses)
 
 ## Installation
 
-If you do not have the conda environment, you can create a new environment using the following command.
+The conda environment file is provided in the repository. You can create the environment using the following command.
 
-`conda create -n pylake conda=23.7.2`
+`conda env create -f twistedWorm.yml`
+
+Then activate the environment using the following command.
+
+`conda activate tworm`
 
 
+The repository has been provded with a set of sample data under `data/sample_data`. If you now run,
 
-Then you can activate the environment using the following command.
-`conda activate pylake`
+`python main.py`
 
-Add conda-forge to the list of channels you can install packages from using the following command.
-`conda config --add channels conda-forge`
-
-Then you can install the required packages using the following command.
-`conda install --file requirements.txt`
-This will create a new environment with the name env and install all the required packages.
-
-Make sure to have the conda env python in the PATH. You can check this by running the following command.
-`which python`
-
-If it is not in the PATH, you can add it to the PATH using the following command.
-`export PATH=$PATH:/home/user/anaconda3/envs/pylake/bin:$PATH`
+It will fit the data in the `data/sample_data` folder and export the results in the `data/output` folder.
 
 
 ## Basic Usage
 
-Add all the .h5 files in the data folder under a subfolder with a name ( say 'my-data' ). Then you have to set up the folder inside the input.txt, where you have to specify the folder name. You can also specify output folder name.
+If you want to analyse your own datafiles, add all your .h5 files in the 'data' folder under a subfolder with a name ( say 'my-data' ).
 
-**input.txt**
+Then in `src/input.txt` you have to set up a few things, you have to specify the folder name for your input data. You have to also specify a output folder name, it will be created in the data folder.
+
+**src/input.txt**
 ```
 #PARAM VALUE
 Source data/<my-data>
@@ -52,6 +49,7 @@ useLog true
 ```
 
 Make sure you are in the directory with main.py. Then run the following command.
+
 `python main.py`
 
 ## Model
@@ -83,26 +81,21 @@ useLog is set to true, then the log of the y-axis will be taken. This is useful 
 
 To change true to false, change 1 to 0.
 
-### 2. Custom Initial Guesses
-**default.txt**
-```html
-#PARAMS VALUE TYPE DESCRIPTION
-DNA/C       440 value   twist-rigidity
-DNA/C   true    fixed   twist-rigidity
-DNA/Fc  30.6    value   critical-force
-DNA/Fc  true    fixed   critical-force
-```
-You can set the initial guesses for the parameters in the default.txt file. You can also set the upper and lower bounds for the parameters. You can also fix the parameters by setting the fixed to true. You can also add new parameters to the default.txt file that are compatible with PyLake.
 
-This needs to be done for the final fit model.
+### 2. Custom Model
 
- :warning: **If you are using custom model**: Change the default.txt accordingly if you are using a custom model in your final_fit_model function as instructed in the next section. Different models have different parameters and the default.txt file should be updated accordingly. 
- 
-If you decide to change the initial guesses, you can also change the initial_guess_model function in the model.py file.
-But make sure to change the input_guess_params.txt file accordingly.
+There are two default models provided in the model.py file. The initial_guess_model and the final_fit_model. The initial_guess_model is used to estimate the initial guess for the final fitting procedure, by default this uses the standard worm-like chain model. 
 
-### 3. Custom Model
-**model.py**
+Then with better guesses from initial_guess_model, the final_fit_model is used to fit the final model. By default, this uses the tWLC model.
+
+You can change either of the model to your custom model. But this needs to be compatible with PyLake (recommend looking into their documentation).
+
+
+ :warning: **If you are using custom model**: If you modify the initial_guess_model, make sure to modify the initial_guess_params.txt file to match the parameters of the model. If you modify the final_fit_model, make sure to modify the default.txt file to match the parameters of the model. This is described in the next section.
+
+
+
+**src/model.py**
 ```python
 def initial_guess_model():
     """
@@ -122,8 +115,31 @@ def final_fit_model():
     return lk.twlc_force("DNA").subtract_independent_offset() + lk.force_offset("DNA")
 ```
 
-You can also set the custom model for the initial guess and the final fit. You can also add new parameters to the model that are compatible with PyLake.
 
-<!-- add contributor -->
-Author: Auro Varat Patnaik
-<!-- add license -->
+
+
+### 3. Custom Initial Guesses
+
+For the fitting params, you have two files - initial_guess_params.txt and default.txt. 
+
+The initial_guess_params.txt sets the initial guesses for the initial standard worm-like chain model.If you wish to change the initial guesses, you can change the initial_guess_params.txt file. 
+
+ The default.txt sets the initial guesses for the final tWLC model. If you wish to change the initial guesses, you can change the default.txt file.
+
+ Note: default.txt should consists of parameters that are part of your final model but not in the initial_guess_params.txt file. Because the final model inherits the parameters from the initial_guess_params.txt file.
+
+**default.txt**
+```html
+#PARAMS VALUE TYPE DESCRIPTION
+DNA/C       440 value   twist-rigidity
+DNA/C   true    fixed   twist-rigidity
+DNA/Fc  30.6    value   critical-force
+DNA/Fc  true    fixed   critical-force
+```
+You can set the initial guesses for the parameters in the default.txt file. You can also set the upper and lower bounds for the parameters. You can also fix the parameters by setting the fixed to true. You can also add new parameters to the default.txt file that are compatible with PyLake.
+
+This needs to be done for the final fit model.
+
+
+
+
