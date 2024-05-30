@@ -1,6 +1,8 @@
 # TWLC Fitting for Optical Tweezer Data
 <!-- add contributor -->
 Auro Varat Patnaik
+
+The program is strongly based on : [Lumicks Example](https://lumicks-pylake.readthedocs.io/en/stable/examples/twlc_fitting/twlc_fitting.html)
 <!-- add license -->
 ## Table of Contents
 
