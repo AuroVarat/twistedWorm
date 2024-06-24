@@ -45,9 +45,9 @@ Then in `src/input.txt` you have to set up a few things, you have to specify the
 #PARAM VALUE
 Source data/<my-data>
 Export data/<my-output>
-Filter true 
+Filter 1
 Curve both
-useLog true
+useLog 1
 ```
 
 Make sure you are in the directory with main.py. Then run the following command.
